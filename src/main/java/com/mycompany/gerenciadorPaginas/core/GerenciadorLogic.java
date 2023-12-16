@@ -31,6 +31,24 @@ public class GerenciadorLogic {
 		
 		alocarPagina(pagina);
 	}
+
+	
+	public void acessarPagina(Pagina pagina) {
+		if(paginasDisco.remove(pagina)) {
+			alocarPagina(pagina);
+		}
+	}
+	
+	public void removerPagina(Pagina pagina) {
+		int enderecoPagina = pagina.getEndereco();
+		enderecosPagina.remove(enderecoPagina);
+		
+		if(!paginasDisco.remove(pagina)) {
+			paginasMemoria.remove(pagina);
+			int molduraEndereco = moldurasPorPagina.remove(enderecoPagina);
+			moldurasDisponiveis.add(molduraEndereco);
+		}
+	}
 	
 	private void alocarPagina(Pagina pagina) {
 		int enderecoPagina = pagina.getEndereco();
@@ -56,30 +74,13 @@ public class GerenciadorLogic {
 		}
 	}
 	
-	public void acessarPagina(Pagina pagina) {
-		if(paginasDisco.remove(pagina)) {
-			alocarPagina(pagina);
-		}
-	}
-	
-	public void removerPagina(Pagina pagina) {
-		int enderecoPagina = pagina.getEndereco();
-		enderecosPagina.remove(enderecoPagina);
-		
-		if(!paginasDisco.remove(pagina)) {
-			paginasMemoria.remove(pagina);
-			int molduraEndereco = moldurasPorPagina.remove(enderecoPagina);
-			moldurasDisponiveis.remove(molduraEndereco);
-		}
-	}
-	
-	public int gerarEnderecoPagina() {
+	private int gerarEnderecoPagina() {
 		Random r = new Random();
 		int endereco = 0;
 		
 		do {
 			endereco = r.nextInt(30);
-		} while(enderecosPagina.contains(endereco) || enderecosPagina.contains(endereco));
+		} while(enderecosPagina.contains(endereco));
 		
 		return endereco;
 	}
