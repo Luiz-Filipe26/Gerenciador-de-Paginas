@@ -8,7 +8,7 @@ import com.mycompany.gerenciadorPaginas.tarefa.TarefaStringAleatoria;
 
 public class Processo {
 
-    public static ArrayList<Processo> listaDeProcessos = new ArrayList<>();
+    public static final ArrayList<Processo> listaDeProcessos = new ArrayList<>();
     public static int ultimo_id;
     private int id;
     private String nome;

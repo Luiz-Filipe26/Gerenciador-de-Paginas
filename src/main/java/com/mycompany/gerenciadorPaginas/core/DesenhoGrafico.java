@@ -13,38 +13,33 @@ public class DesenhoGrafico {
 	
 	private List<List<Pagina>> sequenciaPaginasNaMemoria;
     private Map<Integer, Pagina> paginaFalhadaPorInstante;
-	
-    private int xInicial;
-    private int yInicial;
+
+    private final Color[] CORES = new Color[]{
+    		Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PINK, Color.CYAN,
+            Color.MAGENTA, Color.LIGHTGRAY, Color.DARKGRAY, Color.GRAY, Color.BLACK, Color.WHITE,
+            Color.LIGHTGRAY, Color.web("#FF5733"), Color.web("#4B0082")};;
+    
+    private final int X_INICIAl = 20;
+    private final int Y_INICIAL = 20;
+    private final int UNIDADE_LARGURA = 30;
+    private final int ALTURA_LINHA = 30;
+    private final int MARGEM_DAS_LINHAS = 10;
+    private final int TAMANHO_FONTE = 14;
+    private double zoom;
+    private final GraphicsContext gc;
+    private final GraphicsContext gcPaginas;
     private int xOffset;
     private int yOffset;
-    private int unidadeLargura;
-    private int alturaLinha;
-    private int margemDasLinhas;
     private int instanteInicio;
-    private int tamanhoFonte;
-    private GraphicsContext gc;
-    private GraphicsContext gcPaginas;
-    private Color[] cores;
-    private double zoom;
 
     public DesenhoGrafico(GraphicsContext gc, GraphicsContext gcPaginas) {
         this.gc = gc;
         this.gcPaginas = gcPaginas;
 
-        xInicial = 20;
-        yInicial = 20;
         xOffset = 0;
         yOffset = 0;
-        unidadeLargura = 30;
-        alturaLinha = 30;
-        margemDasLinhas = 10;
-        tamanhoFonte = 16;
         instanteInicio = 0;
         zoom = 1;
-        cores = new Color[]{Color.BLUE, Color.RED, Color.GREEN, Color.YELLOW, Color.ORANGE, Color.PINK, Color.CYAN,
-            Color.MAGENTA, Color.LIGHTGRAY, Color.DARKGRAY, Color.GRAY, Color.BLACK, Color.WHITE,
-            Color.LIGHTGRAY, Color.web("#FF5733"), Color.web("#4B0082")};
 
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
@@ -75,7 +70,7 @@ public class DesenhoGrafico {
     }
 
     public void repintarGrafico(Map<Processo, List<Integer>> processosExecutando, int instanteAtual) {
-        gc.setFont(new Font("Serif", zoom * 14));
+        gc.setFont(new Font("Serif", zoom * TAMANHO_FONTE));
 
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
@@ -91,7 +86,7 @@ public class DesenhoGrafico {
                 if (!instantesDeExecucao.contains(instante)) {
                     continue;
                 }
-                desenharUnidadeDeBarra(cores[i % cores.length], numProcesso, instante - instanteInicio);
+                desenharUnidadeDeBarra(CORES[i % CORES.length], numProcesso, instante - instanteInicio);
                 if (instantesDeExecucao.get(0) == instante) {
                     desenharTexto(Color.BLACK, processo.getNome(), numProcesso);
                 }
@@ -106,7 +101,7 @@ public class DesenhoGrafico {
             List<Integer> instantesDeExecucao = processosExecutando.get(processo);
 
             if (instantesDeExecucao != null && instantesDeExecucao.contains(instanteAtual)) {
-                desenharUnidadeDeBarra(cores[i % cores.length], numProcesso, instanteAtual - instanteInicio);
+                desenharUnidadeDeBarra(CORES[i % CORES.length], numProcesso, instanteAtual - instanteInicio);
                 if (instantesDeExecucao.get(0) == instanteAtual) {
                     desenharTexto(Color.BLACK, processo.getNome(), numProcesso);
                 }
@@ -116,15 +111,15 @@ public class DesenhoGrafico {
 
     private void desenharUnidadeDeBarra(Color barColor, int processo, int instante) {
         gc.setFill(barColor);
-        gc.fillRect((xInicial + zoom * (xOffset + unidadeLargura * instante)),
-                (yInicial + zoom * (yOffset + processo * (margemDasLinhas + alturaLinha))),
-                unidadeLargura * zoom,
-                alturaLinha * zoom);
+        gc.fillRect((X_INICIAl + zoom * (xOffset + UNIDADE_LARGURA * instante)),
+                (Y_INICIAL + zoom * (yOffset + processo * (MARGEM_DAS_LINHAS + ALTURA_LINHA))),
+                UNIDADE_LARGURA * zoom,
+                ALTURA_LINHA * zoom);
     }
 
     private void desenharTexto(Color barColor, String nomeProcesso, int processo) {
         gc.setFill(barColor);
-        gc.fillText(nomeProcesso, xInicial - 15, yInicial + zoom * (yOffset + (processo * (margemDasLinhas + alturaLinha) + alturaLinha / 2)));
+        gc.fillText(nomeProcesso, X_INICIAl - 15, Y_INICIAL + zoom * (yOffset + (processo * (MARGEM_DAS_LINHAS + ALTURA_LINHA) + ALTURA_LINHA / 2)));
     }
     
     
@@ -165,22 +160,22 @@ public class DesenhoGrafico {
 
     private void desenharUnidadeDeBarraPagina(Color barColor, int instante, int pagina) {
         gcPaginas.setFill(barColor);
-        gcPaginas.fillRect((xInicial + zoom * (xOffset + unidadeLargura * instante)),
-                (yInicial + zoom * (yOffset + pagina * (margemDasLinhas + alturaLinha))),
-                unidadeLargura * zoom,
-                alturaLinha * zoom);
+        gcPaginas.fillRect((X_INICIAl + zoom * (xOffset + UNIDADE_LARGURA * instante)),
+                (Y_INICIAL + zoom * (yOffset + pagina * (MARGEM_DAS_LINHAS + ALTURA_LINHA))),
+                UNIDADE_LARGURA * zoom,
+                ALTURA_LINHA * zoom);
     }
 
     private void desenharTextoMoldura(Color barColor, int numMoldura) {
-        double x = xInicial - 18;
-        double y = yInicial + zoom * (yOffset + alturaLinha / 2 + numMoldura * (margemDasLinhas + alturaLinha));
+        double x = X_INICIAl - 18;
+        double y = Y_INICIAL + zoom * (yOffset + ALTURA_LINHA / 2 + numMoldura * (MARGEM_DAS_LINHAS + ALTURA_LINHA));
         gcPaginas.setFill(Color.BLACK);
         gcPaginas.fillText("M" + (numMoldura + 1) + ": ", x, y);
     }
 
     private void desenharTextoTarefa(Color barColor, String nomeProcesso, int instante, int pagina, int enderecoPagina) {
-        double x = xInicial + zoom * (xOffset + unidadeLargura * instante + 5);
-        double y = yInicial + zoom * (yOffset + alturaLinha / 2 + pagina * (margemDasLinhas + alturaLinha));
+        double x = X_INICIAl + zoom * (xOffset + UNIDADE_LARGURA * instante + 5);
+        double y = Y_INICIAL + zoom * (yOffset + ALTURA_LINHA / 2 + pagina * (MARGEM_DAS_LINHAS + ALTURA_LINHA));
         gcPaginas.setFill(barColor);
         gcPaginas.fillText(nomeProcesso + ": " + enderecoPagina, x, y);
     }

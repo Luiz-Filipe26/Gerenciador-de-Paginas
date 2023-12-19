@@ -14,7 +14,7 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 
 public class Escalonador extends Thread {
 
-    private ApplicationController applicationController;
+    private final ApplicationController applicationController;
 
     private List<Processo> listaProcessosExecutando = new ArrayList<>();
     private List<Processo> filaProcessosProntos = new ArrayList<>();
