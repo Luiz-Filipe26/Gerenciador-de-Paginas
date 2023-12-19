@@ -1,4 +1,4 @@
-package com.mycompany.gerenciadorPaginas.core;
+package com.mycompany.gerenciadorPaginas.tarefa;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;

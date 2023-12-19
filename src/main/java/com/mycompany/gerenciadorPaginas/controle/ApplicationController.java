@@ -5,29 +5,29 @@ import java.util.Map;
 
 import com.mycompany.gerenciadorPaginas.core.DesenhoGrafico;
 import com.mycompany.gerenciadorPaginas.core.Processo;
-import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorLogic;
+import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorMemoria;
 import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorPaginasDeProcessos;
 import com.mycompany.gerenciadorPaginas.corePaginas.Pagina;
 import com.mycompany.gerenciadorPaginas.fxmlController.View;
 
-public class GerenciadorPaginasController {
+public class ApplicationController {
 
-    private static GerenciadorPaginasController gerenciadorPaginasController;
+    private static ApplicationController applicationController;
     private View view;
     private DesenhoGrafico desenhoGrafico;
     private GerenciadorPaginasDeProcessos gerenciadorPaginasDeProcessos;
-    private GerenciadorLogic gerenciadorLogic;
+    private GerenciadorMemoria gerenciadorMemoria;
 
-    public synchronized static GerenciadorPaginasController getInstancia() {
+    public synchronized static ApplicationController getInstancia() {
 
-        if (gerenciadorPaginasController == null) {
-            gerenciadorPaginasController = new GerenciadorPaginasController();
+        if (applicationController == null) {
+            applicationController = new ApplicationController();
         }
 
-        return gerenciadorPaginasController;
+        return applicationController;
     }
 
-    private GerenciadorPaginasController() {
+    private ApplicationController() {
 
     }
 
@@ -43,12 +43,12 @@ public class GerenciadorPaginasController {
         this.gerenciadorPaginasDeProcessos = gerenciadorPaginasDeProcessos;
     }
 
-    public void setGerenciadorLogic(GerenciadorLogic gerenciadorLogic) {
-        this.gerenciadorLogic = gerenciadorLogic;
+    public void setGerenciadorLogic(GerenciadorMemoria gerenciadorMemoria) {
+        this.gerenciadorMemoria = gerenciadorMemoria;
     }
 
     public void setTipoAlocao(String tipoAlocacao) {
-        gerenciadorLogic.setTipoAlocacao(tipoAlocacao);
+        gerenciadorMemoria.setTipoAlocacao(tipoAlocacao);
     }
 
     public void adicionarOffset(int xOffset, int yOffset) {
@@ -80,19 +80,19 @@ public class GerenciadorPaginasController {
     }
 
     public Pagina criarPagina(int enderecoPagina, Processo processo) {
-        return gerenciadorLogic.criarPagina(enderecoPagina, processo);
+        return gerenciadorMemoria.criarPagina(enderecoPagina, processo);
     }
 
     public void acessarPagina(int enderecoPagina, Processo processo) {
-        gerenciadorLogic.acessarPagina(enderecoPagina, processo);
+        gerenciadorMemoria.acessarPagina(enderecoPagina, processo);
     }
 
     public void acessarPagina(Pagina pagina, Processo processo) {
-        gerenciadorLogic.acessarPagina(pagina, processo);
+        gerenciadorMemoria.acessarPagina(pagina, processo);
     }
 
     public void removerPagina(Pagina pagina) {
-        gerenciadorLogic.removerPagina(pagina);
+        gerenciadorMemoria.removerPagina(pagina);
     }
 
     public void adicionarSequenciaPaginas(List<Integer> sequenciasPaginas) {
@@ -104,7 +104,7 @@ public class GerenciadorPaginasController {
     }
 
     public List<Pagina> getPaginasMemoria() {
-        return gerenciadorLogic.getPaginasMemoria();
+        return gerenciadorMemoria.getPaginasMemoria();
     }
 
     public void atualizarPaginas(Processo processo, int instante) {
@@ -112,7 +112,7 @@ public class GerenciadorPaginasController {
     }
 
     public Pagina getPaginaFalhada() {
-        return gerenciadorLogic.getPaginaFalhada();
+        return gerenciadorMemoria.getPaginaFalhada();
     }
 
     public List<Integer> getFuturasPaginas() {
@@ -128,6 +128,6 @@ public class GerenciadorPaginasController {
     }
     
     public void setNumMolduras(int numMolduras) {
-        gerenciadorLogic.setNumMolduras(numMolduras);
+        gerenciadorMemoria.setNumMolduras(numMolduras);
     }
 }

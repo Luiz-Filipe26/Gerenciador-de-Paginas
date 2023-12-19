@@ -4,7 +4,7 @@ import java.io.IOException;
 
 import com.mycompany.gerenciadorPaginas.core.DesenhoGrafico;
 import com.mycompany.gerenciadorPaginas.core.Escalonador;
-import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorLogic;
+import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorMemoria;
 import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorPaginasDeProcessos;
 
 import javafx.application.Application;
@@ -30,8 +30,8 @@ public class App extends Application {
         stage.setScene(scene);
         stage.setTitle("Gerenciador de Páginas");
 
-        GerenciadorPaginasController gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
-        gerenciadorPaginasController.setFXMLController(fxmlLoader.getController());
+        ApplicationController applicationController = ApplicationController.getInstancia();
+        applicationController.setFXMLController(fxmlLoader.getController());
 
         Canvas canvasGrafico = (Canvas) root.lookup("#canvasGrafico");
         GraphicsContext gc = canvasGrafico.getGraphicsContext2D();
@@ -39,18 +39,18 @@ public class App extends Application {
         GraphicsContext gcPaginas = canvasGraficoPaginas.getGraphicsContext2D();
 
         DesenhoGrafico desenhoGrafico = new DesenhoGrafico(gc, gcPaginas);
-        gerenciadorPaginasController.setDesenhoGrafico(desenhoGrafico);
+        applicationController.setDesenhoGrafico(desenhoGrafico);
 
         GerenciadorPaginasDeProcessos gerenciadorPaginasDeProcessos = new GerenciadorPaginasDeProcessos();
-        gerenciadorPaginasController.setGerenciadorPaginasDeProcessos(gerenciadorPaginasDeProcessos);
+        applicationController.setGerenciadorPaginasDeProcessos(gerenciadorPaginasDeProcessos);
 
-        GerenciadorLogic gerenciadorLogic = new GerenciadorLogic();
-        gerenciadorPaginasController.setGerenciadorLogic(gerenciadorLogic);
+        GerenciadorMemoria gerenciadorMemoria = new GerenciadorMemoria();
+        applicationController.setGerenciadorLogic(gerenciadorMemoria);
 
         //Adicionar listener
         stage.setOnCloseRequest(event -> {
             if (Escalonador.getInstancia() != null && Escalonador.getInstancia().isAlive()) {
-                Escalonador.getInstancia().parar();
+            	Escalonador.getInstancia().parar();
             }
             Platform.exit();
         });

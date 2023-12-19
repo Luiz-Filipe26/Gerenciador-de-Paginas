@@ -10,7 +10,10 @@ import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 
 public class DesenhoGrafico {
-
+	
+	private List<List<Pagina>> sequenciaPaginasNaMemoria;
+    private Map<Integer, Pagina> paginaFalhadaPorInstante;
+	
     private int xInicial;
     private int yInicial;
     private int xOffset;
@@ -55,15 +58,24 @@ public class DesenhoGrafico {
         this.xOffset += xOffset;
         this.yOffset += yOffset;
         repintarGrafico(Escalonador.getInstancia().getMapaInstantes(), Escalonador.getInstancia().getInstanteAtual());
+        desenharPaginas();
     }
 
     public void darZoom(double fatorZoom) {
         this.zoom *= fatorZoom;
         repintarGrafico(Escalonador.getInstancia().getMapaInstantes(), Escalonador.getInstancia().getInstanteAtual());
+        desenharPaginas();
+    }
+
+    public void resetarGrafico() {
+        zoom = 1;
+        instanteInicio = Escalonador.getInstancia().getInstanteAtual();
+        repintarGrafico(Escalonador.getInstancia().getMapaInstantesLimpo(), instanteInicio);
+        desenharPaginas();
     }
 
     public void repintarGrafico(Map<Processo, List<Integer>> processosExecutando, int instanteAtual) {
-        gc.setFont(new Font("Serif", 14));
+        gc.setFont(new Font("Serif", zoom * 14));
 
         gc.setFill(Color.WHITE);
         gc.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
@@ -88,9 +100,7 @@ public class DesenhoGrafico {
     }
 
     public void atualizarGrafico(Map<Processo, List<Integer>> processosExecutando, int instanteAtual) {
-        int xTam = xInicial + unidadeLargura * (instanteAtual - instanteInicio);
-        int yTam = yInicial + processosExecutando.size() * (margemDasLinhas + alturaLinha);
-
+        
         for (int i = Processo.listaDeProcessos.size() - 1, numProcesso = 0; i >= 0; i--, numProcesso++) {
             Processo processo = Processo.listaDeProcessos.get(i);
             List<Integer> instantesDeExecucao = processosExecutando.get(processo);
@@ -116,14 +126,15 @@ public class DesenhoGrafico {
         gc.setFill(barColor);
         gc.fillText(nomeProcesso, xInicial - 15, yInicial + zoom * (yOffset + (processo * (margemDasLinhas + alturaLinha) + alturaLinha / 2)));
     }
-
-    public void resetarGrafico() {
-        zoom = 1;
-        instanteInicio = Escalonador.getInstancia().getInstanteAtual();
-        repintarGrafico(Escalonador.getInstancia().getMapaInstantesLimpo(), instanteInicio);
-    }
-
+    
+    
     public void desenharPaginas(List<List<Pagina>> sequenciaPaginasNaMemoria, Map<Integer, Pagina> paginaFalhadaPorInstante) {
+    	this.sequenciaPaginasNaMemoria = sequenciaPaginasNaMemoria;
+    	this.paginaFalhadaPorInstante = paginaFalhadaPorInstante;
+    	desenharPaginas();
+    }
+    
+    public void desenharPaginas() {
         gcPaginas.setFill(Color.WHITE);
         gcPaginas.fillRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
@@ -168,7 +179,7 @@ public class DesenhoGrafico {
     }
 
     private void desenharTextoTarefa(Color barColor, String nomeProcesso, int instante, int pagina, int enderecoPagina) {
-        double x = xInicial + zoom * (xOffset + unidadeLargura * instante) + 5;
+        double x = xInicial + zoom * (xOffset + unidadeLargura * instante + 5);
         double y = yInicial + zoom * (yOffset + alturaLinha / 2 + pagina * (margemDasLinhas + alturaLinha));
         gcPaginas.setFill(barColor);
         gcPaginas.fillText(nomeProcesso + ": " + enderecoPagina, x, y);

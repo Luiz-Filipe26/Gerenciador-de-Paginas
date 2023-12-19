@@ -7,10 +7,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Queue;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Processo;
 
-public class GerenciadorLogic {
+public class GerenciadorMemoria {
 
     private String tipoAlocacao;
 
@@ -25,7 +25,7 @@ public class GerenciadorLogic {
     private Map<Integer, Integer> moldurasPorPagina = new HashMap<>();
     private List<Integer> moldurasDisponiveis = new ArrayList<>();
 
-    public GerenciadorLogic() {
+    public GerenciadorMemoria() {
         
     }
 
@@ -58,6 +58,24 @@ public class GerenciadorLogic {
         return paginaFalhada;
     }
 
+    public void acessarPagina(int enderecoPagina, Processo processo) {
+        Pagina pagina = buscarPagina(enderecoPagina);
+        acessarPagina(pagina, processo);
+    }
+    
+    private Pagina buscarPagina(int enderecoPagina) {
+    	List<Pagina>[] colecoesPagina = new List[]{paginasDisco, new ArrayList<>(paginasMemoriaFila), paginasMemoriaLista};
+
+        for (List<Pagina> colecaoPagina : colecoesPagina) {
+            for (Pagina pagina : colecaoPagina) {
+                if (pagina.getEndereco() == enderecoPagina) {
+                    return pagina;
+                }
+            }
+        }
+        return null;
+    }
+
     public Pagina criarPagina(int enderecoPagina, Processo processo) {
         enderecosPagina.add(enderecoPagina);
         Pagina pagina = new Pagina(enderecoPagina, processo);
@@ -66,19 +84,6 @@ public class GerenciadorLogic {
         alocarPagina(pagina);
 
         return pagina;
-    }
-
-    public void acessarPagina(int enderecoPagina, Processo processo) {
-        List<Pagina>[] colecoesPagina = new List[]{paginasDisco, new ArrayList<>(paginasMemoriaFila), paginasMemoriaLista};
-
-        for (List<Pagina> colecaoPagina : colecoesPagina) {
-            for (Pagina paginaAux : colecaoPagina) {
-                if (paginaAux.getEndereco() == enderecoPagina) {
-                    acessarPagina(paginaAux, processo);
-                    return;
-                }
-            }
-        }
     }
 
     public void acessarPagina(Pagina pagina, Processo processo) {
@@ -117,7 +122,7 @@ public class GerenciadorLogic {
     private void alocarPagina(Pagina pagina) {
         int enderecoPagina = pagina.getEndereco();
 
-        if (moldurasDisponiveis.size() > 0) {
+        if (!moldurasDisponiveis.isEmpty()) {
             if (tipoAlocacao.equals("FIFO")) {
                 paginasMemoriaFila.add(pagina);
             } else {
@@ -154,7 +159,7 @@ public class GerenciadorLogic {
     }
 
     private Pagina getPaginaMoverOtimo() {
-        List<Integer> futurasPaginas = GerenciadorPaginasController.getInstancia().getFuturasPaginas();
+        List<Integer> futurasPaginas = ApplicationController.getInstancia().getFuturasPaginas();
         Pagina paginaMaisDistante = null;
 
         int maiorDistancia = -1;

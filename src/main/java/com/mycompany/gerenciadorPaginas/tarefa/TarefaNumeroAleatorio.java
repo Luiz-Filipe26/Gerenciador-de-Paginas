@@ -1,15 +1,15 @@
-package com.mycompany.gerenciadorPaginas.core;
+package com.mycompany.gerenciadorPaginas.tarefa;
 
 import java.util.Random;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 
 public class TarefaNumeroAleatorio extends TarefaAbstrata {
-	private GerenciadorPaginasController gerenciadorPaginasController;
+	private ApplicationController applicationController;
 
     public TarefaNumeroAleatorio(int _idProcesso, String _nomeProcesso) {
         super(_idProcesso, _nomeProcesso);
-        this.gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
+        this.applicationController = ApplicationController.getInstancia();
     }
 
     public void run() {
@@ -24,13 +24,13 @@ public class TarefaNumeroAleatorio extends TarefaAbstrata {
             }
         }
         
-        gerenciadorPaginasController.adicionarTexto("Começo da execução da Thread " + idProcesso + "\n");
+        applicationController.adicionarTexto("Começo da execução da Thread " + idProcesso + "\n");
 
         Random random = new Random();
 
         while (!encerrado) {
             String randomNumberString = gerarNumeroAleatorio(random, 4);
-            gerenciadorPaginasController.adicionarTexto(nomeProcesso + ": " + randomNumberString + "\n");
+            applicationController.adicionarTexto(nomeProcesso + ": " + randomNumberString + "\n");
             
             if (pronto) {
                 synchronized (lock) {

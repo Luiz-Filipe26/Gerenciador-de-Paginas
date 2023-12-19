@@ -2,6 +2,10 @@ package com.mycompany.gerenciadorPaginas.core;
 
 import java.util.ArrayList;
 
+import com.mycompany.gerenciadorPaginas.tarefa.TarefaAbstrata;
+import com.mycompany.gerenciadorPaginas.tarefa.TarefaNumeroAleatorio;
+import com.mycompany.gerenciadorPaginas.tarefa.TarefaStringAleatoria;
+
 public class Processo {
 
     public static ArrayList<Processo> listaDeProcessos = new ArrayList<>();

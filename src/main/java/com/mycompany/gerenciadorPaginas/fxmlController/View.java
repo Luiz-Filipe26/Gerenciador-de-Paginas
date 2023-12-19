@@ -13,7 +13,7 @@ import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
 import javax.swing.JOptionPane;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Escalonador;
 import com.mycompany.gerenciadorPaginas.core.Leitor;
 import com.mycompany.gerenciadorPaginas.core.Processo;
@@ -134,7 +134,7 @@ public class View implements Initializable {
     private Node[] nodesDefinir;
     private Node[] nodesTarefa;
     private Node[] nodesBotaoGrafico;
-    private Map<TextField, String> nomesProcessoPadrao = new HashMap<>();
+    private Map<TextField, String> nomesTarefaPadrao = new HashMap<>();
     private Map<TextField, String> nomesEscalonamentoPadrao1 = new HashMap<>();
     private Map<TextField, String> nomesEscalonamentoPadrao2 = new HashMap<>();
 
@@ -173,19 +173,21 @@ public class View implements Initializable {
         nodesDefinir = new Node[]{textFieldNumProcessadores, textFieldUnidadeQuantum, textFieldQuantumPorProcesso, textFieldNumMolduras, buttonDefinirEscalonamento};
         nodesTarefa = new Node[]{textFieldNome, textFieldIngresso, textFieldDuracao, textFieldPrioridade, buttonAdicionarProcesso, comboBoxTipoTarefa, buttonAdicionarProcessosDeArquivo};
         nodesBotaoGrafico = new Node[]{buttonCima, buttonBaixo, buttonEsquerda, buttonDireita, buttonZoomIn, buttonZoomOut};
-
-        nomesProcessoPadrao.put(textFieldNome, textFieldNome.getText());
-        nomesProcessoPadrao.put(textFieldIngresso, textFieldIngresso.getText());
-        nomesProcessoPadrao.put(textFieldDuracao, textFieldDuracao.getText());
-        nomesProcessoPadrao.put(textFieldPrioridade, textFieldPrioridade.getText());
-        nomesProcessoPadrao.put(textFieldNumMolduras, textFieldNumMolduras.getText());
-
-        nomesEscalonamentoPadrao1.put(textFieldNumProcessadores, textFieldNumProcessadores.getText());
-        nomesEscalonamentoPadrao1.put(textFieldUnidadeQuantum, textFieldUnidadeQuantum.getText());
-        nomesEscalonamentoPadrao1.put(textFieldQuantumPorProcesso, textFieldQuantumPorProcesso.getText());
-
-        nomesEscalonamentoPadrao1.put(textFieldNumProcessadores, textFieldNumProcessadores.getText());
-        nomesEscalonamentoPadrao1.put(textFieldUnidadeQuantum, textFieldUnidadeQuantum.getText());
+        
+        for(Node node: nodesTarefa) {
+        	if(node instanceof TextField) {
+        		nomesTarefaPadrao.put((TextField) node, ((TextField) node).getText());
+        	}
+        }
+        
+        for(Node node : nodesDefinir) {
+        	if(node instanceof TextField) {
+        		nomesEscalonamentoPadrao1.put((TextField) node, ((TextField) node).getText());
+        	}
+        }
+        
+        nomesEscalonamentoPadrao2 = new HashMap<>(nomesEscalonamentoPadrao1);
+        nomesEscalonamentoPadrao2.remove(textFieldQuantumPorProcesso);
     }
 
     private void configurarVisibilidades() {
@@ -267,7 +269,7 @@ public class View implements Initializable {
     }
 
     private void tocarSom(Clip som) {
-        som.setFramePosition(0);
+    	som.setFramePosition(0);
         som.start();
     }
 
@@ -278,10 +280,10 @@ public class View implements Initializable {
         String mensagem = "Número de trocas de contexto: " + numTrocasContexto
                 + "\nTempo médio de execução: " + formato.format(tempoMedioExecucao) + "s"
                 + "\nTempo médio de espera: " + formato.format(tempoMedioEspera) + "s"
-                + "\nNúmero de falhas: " + GerenciadorPaginasController.getInstancia().getNumFalhas();
+                + "\nNúmero de falhas: " + ApplicationController.getInstancia().getNumFalhas();
 
         Platform.runLater(() -> {
-            textAreaConsolePaginas.appendText(mensagem + "\n Sequência de páginas falhadas: " + GerenciadorPaginasController.getInstancia().getSequenciaFalhas());
+            textAreaConsolePaginas.appendText(mensagem + "\n Sequência de páginas falhadas: " + ApplicationController.getInstancia().getSequenciaFalhas());
         });
 
         JOptionPane.showMessageDialog(null, mensagem, "Resultado do escalonamento", JOptionPane.INFORMATION_MESSAGE);
@@ -332,7 +334,7 @@ public class View implements Initializable {
         labelMensagens.setText("Sequência de " + sequenciasPaginas.size() + " páginas adicionadas com sucesso!");
         buttonEscalonar.setVisible(true);
 
-        GerenciadorPaginasController.getInstancia().adicionarSequenciaPaginas(sequenciasPaginas);
+        ApplicationController.getInstancia().adicionarSequenciaPaginas(sequenciasPaginas);
     }
 
     private int getDuracaoProcessosTotal() {
@@ -351,15 +353,15 @@ public class View implements Initializable {
     public void buttonAdicionarProcessoPressionado(ActionEvent event) {
         tocarSom(somBotaoPressionado);
 
-        if (!isEntradasValidas(nomesProcessoPadrao)) {
-            resetarCampos(nomesProcessoPadrao);
+        if (!isEntradasValidas(nomesTarefaPadrao)) {
+            resetarCampos(nomesTarefaPadrao);
             return;
         }
 
         adicionarProcesso();
         buttonSequenciasPaginas.setVisible(true);
 
-        resetarCampos(nomesProcessoPadrao);
+        resetarCampos(nomesTarefaPadrao);
     }
 
     private void adicionarProcesso() {
@@ -384,8 +386,8 @@ public class View implements Initializable {
         }
 
         definirEscalonamento();
-        GerenciadorPaginasController.getInstancia().setTipoAlocao(comboBoxTipoAlocacao.getValue());
-        GerenciadorPaginasController.getInstancia().setNumMolduras(Integer.parseInt(textFieldNumMolduras.getText()));
+        ApplicationController.getInstancia().setTipoAlocao(comboBoxTipoAlocacao.getValue());
+        ApplicationController.getInstancia().setNumMolduras(Integer.parseInt(textFieldNumMolduras.getText()));
 
         atualizarVisibilidadesEscalonamento();
         labelMensagens.setText("");
@@ -496,38 +498,38 @@ public class View implements Initializable {
 
     @FXML
     public void buttonBaixoPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().adicionarOffset(0, -40);
+        ApplicationController.getInstancia().adicionarOffset(0, -40);
     }
 
     @FXML
     public void buttonCimaPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().adicionarOffset(0, 40);
+        ApplicationController.getInstancia().adicionarOffset(0, 40);
     }
 
     @FXML
     public void buttonEsquerdaPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().adicionarOffset(30, 0);
+        ApplicationController.getInstancia().adicionarOffset(30, 0);
     }
 
     @FXML
     public void buttonDireitaPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().adicionarOffset(-30, -0);
+        ApplicationController.getInstancia().adicionarOffset(-30, -0);
     }
 
     @FXML
     public void buttonResetarGrafico(ActionEvent event) {
         tocarSom(somBotaoPressionado);
-        GerenciadorPaginasController.getInstancia().resetarGrafico();
+        ApplicationController.getInstancia().resetarGrafico();
     }
 
     @FXML
     public void buttonZoomInPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().darZoom(1.1);
+        ApplicationController.getInstancia().darZoom(1.1);
     }
 
     @FXML
     public void buttonZoomOutPressionado(ActionEvent event) {
-        GerenciadorPaginasController.getInstancia().darZoom(1 / 1.1);
+        ApplicationController.getInstancia().darZoom(1 / 1.1);
     }
 
 }

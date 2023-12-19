@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Processo;
 
 public class GerenciadorPaginasDeProcessos {
 
-    private final GerenciadorPaginasController gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
+    private final ApplicationController applicationController = ApplicationController.getInstancia();
 
     List<List<Pagina>> sequenciaPaginasNaMemoria = new ArrayList<>();
     private List<Integer> sequenciaPaginas = new ArrayList<>();
@@ -22,19 +22,19 @@ public class GerenciadorPaginasDeProcessos {
         boolean paginaExistente = sequenciaPaginas.indexOf(enderecoPagina) < instante;
 
         if (!paginaExistente) {
-            gerenciadorPaginasController.criarPagina(enderecoPagina, processo);
+            applicationController.criarPagina(enderecoPagina, processo);
         } else {
-            gerenciadorPaginasController.acessarPagina(enderecoPagina, processo);
+            applicationController.acessarPagina(enderecoPagina, processo);
         }
 
-        List<Pagina> paginasNaMemoria = gerenciadorPaginasController.getPaginasMemoria();
+        List<Pagina> paginasNaMemoria = applicationController.getPaginasMemoria();
         sequenciaPaginasNaMemoria.add(paginasNaMemoria);
-        Pagina paginaFalhada = gerenciadorPaginasController.getPaginaFalhada();
+        Pagina paginaFalhada = applicationController.getPaginaFalhada();
         if (paginaFalhada != null) {
             paginaFalhadaPorInstante.put(instante, paginaFalhada);
         }
 
-        gerenciadorPaginasController.desenharPaginas(sequenciaPaginasNaMemoria, paginaFalhadaPorInstante);
+        applicationController.desenharPaginas(sequenciaPaginasNaMemoria, paginaFalhadaPorInstante);
     }
 
     public void adicionarSequenciaPaginas(List<Integer> sequenciasPaginas) {
@@ -58,7 +58,8 @@ public class GerenciadorPaginasDeProcessos {
         int ultimoInstante = sequenciaPaginasNaMemoria.size();
         for (int instante = 0; instante < ultimoInstante; instante++) {
             if (paginaFalhadaPorInstante.containsKey(instante)) {
-                texto += paginaFalhadaPorInstante.get(instante).getEndereco() + ", ";
+            	paginaFalhada = paginaFalhadaPorInstante.get(instante).getEndereco();
+                texto += paginaFalhada + ", ";
             }
         }
 
@@ -66,4 +67,5 @@ public class GerenciadorPaginasDeProcessos {
 
         return texto;
     }
+    
 }

@@ -1,16 +1,16 @@
-package com.mycompany.gerenciadorPaginas.core;
+package com.mycompany.gerenciadorPaginas.tarefa;
 
 import java.util.Random;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 
 public class TarefaStringAleatoria extends TarefaAbstrata {
 
-    private GerenciadorPaginasController gerenciadorPaginasController;
+    private ApplicationController applicationController;
 
     public TarefaStringAleatoria(int _idProcesso, String _nomeProcesso) {
         super(_idProcesso, _nomeProcesso);
-        this.gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
+        this.applicationController = ApplicationController.getInstancia();
     }
 
     @Override
@@ -26,13 +26,13 @@ public class TarefaStringAleatoria extends TarefaAbstrata {
             }
         }
 
-        gerenciadorPaginasController.adicionarTexto("Começo da execução da Thread " + idProcesso + "\n");
+        applicationController.adicionarTexto("Começo da execução da Thread " + idProcesso + "\n");
 
         Random random = new Random();
 
         while (!encerrado) {
             String randomString = gerarStringAleatoria(random, 4);
-            gerenciadorPaginasController.adicionarTexto(nomeProcesso + ": " + randomString + "\n");
+            applicationController.adicionarTexto(nomeProcesso + ": " + randomString + "\n");
 
             try {
                 Thread.sleep(200);

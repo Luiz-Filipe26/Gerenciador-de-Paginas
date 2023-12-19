@@ -10,11 +10,11 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
+import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 
 public class Escalonador extends Thread {
 
-    private GerenciadorPaginasController gerenciadorPaginasController;
+    private ApplicationController applicationController;
 
     private List<Processo> listaProcessosExecutando = new ArrayList<>();
     private List<Processo> filaProcessosProntos = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Escalonador extends Thread {
     }
 
     private Escalonador(String _tipoEscalonador, int _numProcessadores, float _unidadeQuantum, int _quantumPorProcesso) {
-        this.gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
+        this.applicationController = ApplicationController.getInstancia();
 
         Escalonador.tipoEscalonador = _tipoEscalonador;
         this.numProcessadores = _numProcessadores;
@@ -125,7 +125,7 @@ public class Escalonador extends Thread {
         escalonador.mapaDeInstantes.put(p, new ArrayList<>());
 
         if (escalonador != null) {
-            GerenciadorPaginasController.getInstancia().repintarGrafico(escalonador.mapaDeInstantes, escalonador.instanteAtual);
+            ApplicationController.getInstancia().repintarGrafico(escalonador.mapaDeInstantes, escalonador.instanteAtual);
             escalonador.processosFuturos.add(p);
             /*if (!fecharAoAcabar && escalonador.isDormindo()) {
                 escalonador.acorda();
@@ -138,10 +138,10 @@ public class Escalonador extends Thread {
     public void run() {
         do {
             adicionarNovosProcessos();
-            while (continuarEscalonador && !processosFuturos.isEmpty() || !listaProcessosExecutando.isEmpty() || !filaProcessosProntos.isEmpty()) {
+            while (continuarEscalonador && (!processosFuturos.isEmpty() || !listaProcessosExecutando.isEmpty() || !filaProcessosProntos.isEmpty())) {
                 if (prosseguirProcessosEmFila()) {
                     mostrarStatusProcessos();
-                    gerenciadorPaginasController.atualizarPaginas(listaProcessosExecutando.get(0), instanteAtual - instanteInicio);
+                    applicationController.atualizarPaginas(listaProcessosExecutando.get(0), instanteAtual - instanteInicio);
                     esperarUmQuantum();
                 }
                 limparProcessosAcabados();
@@ -151,7 +151,7 @@ public class Escalonador extends Thread {
 
             float tempoMedioExecucao = tempoExecucaoTotal * unidadeQuantum / numProcessosIngressados;
             float tempoMedioEspera = tempoEsperaTotal * unidadeQuantum / numProcessosIngressados;
-            gerenciadorPaginasController.mostrarResultadoEscalonador(numTrocasContexto, tempoMedioExecucao, tempoMedioEspera);
+            applicationController.mostrarResultadoEscalonador(numTrocasContexto, tempoMedioExecucao, tempoMedioEspera);
             tempoMedioExecucao = tempoMedioEspera = tempoExecucaoTotal = tempoEsperaTotal = numTrocasContexto = numProcessosIngressados = 0;
             instanteInicio = instanteAtual;
 
@@ -232,7 +232,7 @@ public class Escalonador extends Thread {
     }
 
     private void mostrarStatusProcessos() {
-        gerenciadorPaginasController.atualizarGrafico(mapaDeInstantes, instanteAtual);
+        applicationController.atualizarGrafico(mapaDeInstantes, instanteAtual);
     }
 
     public void limparProcessosAcabados() {
@@ -317,7 +317,7 @@ public class Escalonador extends Thread {
 
     private void esperarUmQuantum() {
         instanteAtual++;
-        gerenciadorPaginasController.adicionarTexto("Instante atual: " + instanteAtual + "\n");
+        applicationController.adicionarTexto("Instante atual: " + instanteAtual + "\n");
         try {
             Thread.sleep((long) (unidadeQuantum * 1000));
         } catch (InterruptedException ex) {
