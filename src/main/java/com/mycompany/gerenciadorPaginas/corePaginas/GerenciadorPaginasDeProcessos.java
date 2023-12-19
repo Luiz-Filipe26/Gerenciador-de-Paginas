@@ -52,20 +52,20 @@ public class GerenciadorPaginasDeProcessos {
     }
 
     public String getSequenciaFalhas() {
-        String texto = "";
+        StringBuilder texto = new StringBuilder();
         int paginaFalhada;
 
         int ultimoInstante = sequenciaPaginasNaMemoria.size();
         for (int instante = 0; instante < ultimoInstante; instante++) {
             if (paginaFalhadaPorInstante.containsKey(instante)) {
             	paginaFalhada = paginaFalhadaPorInstante.get(instante).getEndereco();
-                texto += paginaFalhada + ", ";
+                texto.append(paginaFalhada + ", ");
             }
         }
 
-        texto = texto.substring(0, texto.length() - 2);
+        texto.setLength(texto.length() - 2);
 
-        return texto;
+        return texto.toString();
     }
     
 }
