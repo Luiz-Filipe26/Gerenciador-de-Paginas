@@ -3,6 +3,7 @@ package com.mycompany.gerenciadorPaginas.core;
 import java.util.ArrayList;
 
 public class Processo {
+
     public static ArrayList<Processo> listaDeProcessos = new ArrayList<>();
     public static int ultimo_id;
     private int id;
@@ -31,7 +32,7 @@ public class Processo {
         this.duracao = _duracao;
         this.tempo_restante = duracao;
         this.prioridade = _prioridade;
-        if(Processo.ultimo_id==0) {
+        if (Processo.ultimo_id == 0) {
             Processo.ultimo_id = 1;
         }
         this.id = Processo.ultimo_id;
@@ -41,7 +42,7 @@ public class Processo {
         pronto = false;
         encerrado = false;
         Processo.ultimo_id++;
-        
+
         switch (tipoTarefa) {
             case 1:
                 tarefa = new TarefaStringAleatoria(id, _nome);
@@ -86,7 +87,7 @@ public class Processo {
     public int getPrioridade() {
         return prioridade;
     }
-    
+
     public void setPrioridade(int _prioridade) {
         this.prioridade = _prioridade;
     }
@@ -110,7 +111,7 @@ public class Processo {
     public void diminuiTempoRestante(int tempo) {
         this.tempo_restante -= tempo;
     }
-    
+
     public void adicionaQuantum(int quantum) {
         this.quantum_restante += quantum;
     }
@@ -130,7 +131,7 @@ public class Processo {
     public boolean isEncerrado() {
         return encerrado;
     }
-    
+
     public void criarNovaTarefa() {
         novo = false;
         pronto = true;

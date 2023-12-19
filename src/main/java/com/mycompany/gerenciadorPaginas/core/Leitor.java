@@ -9,7 +9,7 @@ import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class Leitor {
-    
+
     public ArrayList<List<String>> lerArquivos() {
         JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos de Texto", "txt"));
@@ -41,12 +41,12 @@ public class Leitor {
 
             return processos;
         }
-        
+
         return null;
     }
-    
+
     public List<Integer> lerArquivoPaginas() {
-    	JFileChooser fileChooser = new JFileChooser();
+        JFileChooser fileChooser = new JFileChooser();
         fileChooser.setFileFilter(new FileNameExtensionFilter("Arquivos de Texto", "txt"));
         int escolha = fileChooser.showOpenDialog(null);
 
@@ -58,22 +58,22 @@ public class Leitor {
                 String linha;
                 while ((linha = br.readLine()) != null) {
                     String[] partes = linha.trim().split("\\s+");
-                    for(String parte : partes) {
-                    	if (isNumero(parte)) {
-                    		paginas.add(Integer.parseInt(parte));
-                    	}
+                    for (String parte : partes) {
+                        if (isNumero(parte)) {
+                            paginas.add(Integer.parseInt(parte));
+                        }
                     }
                 }
             } catch (IOException e) {
-            	e.printStackTrace();
+                e.printStackTrace();
             }
 
             return paginas;
         }
-        
+
         return null;
     }
-    
+
     private boolean isNumero(String s) {
         try {
             Integer.parseInt(s);

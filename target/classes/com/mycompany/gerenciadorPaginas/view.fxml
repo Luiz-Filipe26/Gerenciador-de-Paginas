@@ -70,7 +70,7 @@
          </font>
       </Button>
       <Label fx:id="labelMensagens" layoutX="13.0" layoutY="23.0" prefHeight="25.0" prefWidth="492.0" />
-      <Button fx:id="buttonDefinirEscalonamento" layoutX="477.0" layoutY="732.0" mnemonicParsing="false" onAction="#buttonDefinirEscalonamentoPressionado" prefHeight="33.0" prefWidth="80.0" text="DEFINIR">
+      <Button fx:id="buttonDefinirEscalonamento" layoutX="585.0" layoutY="736.0" mnemonicParsing="false" onAction="#buttonDefinirEscalonamentoPressionado" prefHeight="33.0" prefWidth="80.0" text="DEFINIR">
          <font>
             <Font size="14.0" />
          </font>
@@ -83,7 +83,7 @@
             <TextArea fx:id="textAreaConsole" prefHeight="400.0" prefWidth="280.0" />
          </content>
       </ScrollPane>
-      <TextArea fx:id="textAreaConsolePaginas" layoutX="690.0" layoutY="292.0" prefHeight="60.0" prefWidth="282.0" />
+      <TextArea fx:id="textAreaConsolePaginas" layoutX="690.0" layoutY="252.0" prefHeight="100.0" prefWidth="282.0" />
       <Canvas fx:id="canvasGraficoPaginas" height="220.0" layoutX="25.0" layoutY="59.0" width="640.0" />
       <Button fx:id="buttonSequenciasPaginas" layoutX="503.0" layoutY="600.0" mnemonicParsing="false" onAction="#buttonSequenciaPaginasPressionado" prefHeight="41.0" prefWidth="178.0" text="SEQUÊNCIA DE PÁGINAS">
          <font>
@@ -91,5 +91,6 @@
          </font>
       </Button>
       <ComboBox fx:id="comboBoxTipoAlocacao" layoutX="477.0" layoutY="706.0" prefHeight="25.0" prefWidth="100.0" promptText="FIFO" />
+      <TextField fx:id="textFieldNumMolduras" layoutX="464.0" layoutY="740.0" prefHeight="25.0" prefWidth="106.0" text="Nº de molduras" />
    </children>
 </AnchorPane>

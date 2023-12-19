@@ -13,9 +13,9 @@ import java.util.logging.Logger;
 import com.mycompany.gerenciadorPaginas.controle.GerenciadorPaginasController;
 
 public class Escalonador extends Thread {
-	
-	private GerenciadorPaginasController gerenciadorPaginasController;
-	
+
+    private GerenciadorPaginasController gerenciadorPaginasController;
+
     private List<Processo> listaProcessosExecutando = new ArrayList<>();
     private List<Processo> filaProcessosProntos = new ArrayList<>();
     private List<Processo> processosFuturos;
@@ -58,8 +58,8 @@ public class Escalonador extends Thread {
 
     private Escalonador(String _tipoEscalonador, int _numProcessadores, float _unidadeQuantum, int _quantumPorProcesso) {
         this.gerenciadorPaginasController = GerenciadorPaginasController.getInstancia();
-    	
-    	Escalonador.tipoEscalonador = _tipoEscalonador;
+
+        Escalonador.tipoEscalonador = _tipoEscalonador;
         this.numProcessadores = _numProcessadores;
         this.unidadeQuantum = _unidadeQuantum;
         this.quantumPorProcesso = _quantumPorProcesso;
@@ -68,7 +68,7 @@ public class Escalonador extends Thread {
         for (Processo processo : Processo.listaDeProcessos) {
             mapaDeInstantes.put(processo, new ArrayList<>());
         }
-        
+
         dormir = false;
         fecharAoAcabar = false;
         continuarEscalonador = true;
@@ -103,17 +103,16 @@ public class Escalonador extends Thread {
     public Map<Processo, List<Integer>> getMapaInstantes() {
         return mapaDeInstantes;
     }
-    
+
     public Map<Processo, List<Integer>> getMapaInstantesLimpo() {
         Iterator<Map.Entry<Processo, List<Integer>>> iterator = mapaDeInstantes.entrySet().iterator();
         while (iterator.hasNext()) {
             Map.Entry<Processo, List<Integer>> entry = iterator.next();
             Processo processo = entry.getKey();
             List<Integer> instantesDeExecucao = entry.getValue();
-            if(processo.getTempoRestante() == 0) {
+            if (processo.getTempoRestante() == 0) {
                 iterator.remove();
-            }
-            else {
+            } else {
                 instantesDeExecucao.removeIf(instante -> instante < instanteAtual);
             }
         }
@@ -126,7 +125,7 @@ public class Escalonador extends Thread {
         escalonador.mapaDeInstantes.put(p, new ArrayList<>());
 
         if (escalonador != null) {
-        	GerenciadorPaginasController.getInstancia().repintarGrafico(escalonador.mapaDeInstantes, escalonador.instanteAtual);
+            GerenciadorPaginasController.getInstancia().repintarGrafico(escalonador.mapaDeInstantes, escalonador.instanteAtual);
             escalonador.processosFuturos.add(p);
             /*if (!fecharAoAcabar && escalonador.isDormindo()) {
                 escalonador.acorda();
@@ -149,13 +148,13 @@ public class Escalonador extends Thread {
                 adicionarNovosProcessos();
                 ordernarFilaProcessos();
             }
-            
-            float tempoMedioExecucao = tempoExecucaoTotal * unidadeQuantum /numProcessosIngressados;
-            float tempoMedioEspera = tempoEsperaTotal * unidadeQuantum /numProcessosIngressados;
+
+            float tempoMedioExecucao = tempoExecucaoTotal * unidadeQuantum / numProcessosIngressados;
+            float tempoMedioEspera = tempoEsperaTotal * unidadeQuantum / numProcessosIngressados;
             gerenciadorPaginasController.mostrarResultadoEscalonador(numTrocasContexto, tempoMedioExecucao, tempoMedioEspera);
-            tempoMedioExecucao = tempoMedioEspera = tempoExecucaoTotal = tempoEsperaTotal =  numTrocasContexto = numProcessosIngressados = 0;
+            tempoMedioExecucao = tempoMedioEspera = tempoExecucaoTotal = tempoEsperaTotal = numTrocasContexto = numProcessosIngressados = 0;
             instanteInicio = instanteAtual;
-            
+
             if (!fecharAoAcabar) {
                 dormir = true;
                 try {
@@ -175,7 +174,7 @@ public class Escalonador extends Thread {
         if (processosFuturos.isEmpty() || processosFuturos.get(0).getIngresso() > instanteAtual) {
             return;
         }
-        
+
         List<Processo> novosProcessos = new ArrayList<>();
 
         for (Processo processo : processosFuturos) {
@@ -203,12 +202,12 @@ public class Escalonador extends Thread {
 
     private boolean prosseguirProcessosEmFila() {
         boolean controlaQuantum = tipoEscalonador.equals("Round-Robin");
-        
+
         if (listaProcessosExecutando.isEmpty() && filaProcessosProntos.isEmpty()) {
             return true;
         }
-        
-        for(int i=listaProcessosExecutando.size(); i<numProcessadores && !filaProcessosProntos.isEmpty(); i++) {
+
+        for (int i = listaProcessosExecutando.size(); i < numProcessadores && !filaProcessosProntos.isEmpty(); i++) {
             Processo processo = filaProcessosProntos.get(0);
             listaProcessosExecutando.add(processo);
             filaProcessosProntos.remove(processo);
@@ -217,11 +216,10 @@ public class Escalonador extends Thread {
             }
         }
 
-        for (Processo processo: listaProcessosExecutando) {
+        for (Processo processo : listaProcessosExecutando) {
             if (!processo.isIniciado()) {
                 processo.iniciarTarefa();
-            }
-            else if (processo.isPronto()) {
+            } else if (processo.isPronto()) {
                 processo.rodarTarefa();
             }
             if (controlaQuantum) {
@@ -236,10 +234,10 @@ public class Escalonador extends Thread {
     private void mostrarStatusProcessos() {
         gerenciadorPaginasController.atualizarGrafico(mapaDeInstantes, instanteAtual);
     }
-    
+
     public void limparProcessosAcabados() {
         int pRemovidos = 0;
-        for (int i=0; i<listaProcessosExecutando.size(); i++) {
+        for (int i = 0; i < listaProcessosExecutando.size(); i++) {
             Processo processo = listaProcessosExecutando.get(i);
             if (processo.getTempoRestante() == 0) {
                 processo.encerrarTarefa();
@@ -257,12 +255,12 @@ public class Escalonador extends Thread {
         if (filaProcessosProntos.isEmpty()) {
             return;
         }
-        
+
         if (tipoEscalonador.equals("Round-Robin")) {
-            if(filaProcessosProntos.isEmpty()) {
+            if (filaProcessosProntos.isEmpty()) {
                 return;
             }
-            for (int i=0, j=listaProcessosExecutando.size() + filaProcessosProntos.size()-(numProcessadores*2); i<listaProcessosExecutando.size() && j>0; i++) {
+            for (int i = 0, j = listaProcessosExecutando.size() + filaProcessosProntos.size() - (numProcessadores * 2); i < listaProcessosExecutando.size() && j > 0; i++) {
                 Processo processo = listaProcessosExecutando.get(i);
                 if (processo.getQuantumRestante() <= 0) {
                     processo.preemptarTarefa();
@@ -274,42 +272,41 @@ public class Escalonador extends Thread {
             }
             numTrocasContexto += Math.min(processosRemovidos, filaProcessosProntos.size());
             return;
-        }
-        else if (tipoEscalonador.equals("Shortest Remaining Time First")) {
-            
+        } else if (tipoEscalonador.equals("Shortest Remaining Time First")) {
+
             int execMaiorTempoRestante;
             int pronMenorTempoRestante;
-            
-            if(!listaProcessosExecutando.isEmpty() && !filaProcessosProntos.isEmpty()) {
+
+            if (!listaProcessosExecutando.isEmpty() && !filaProcessosProntos.isEmpty()) {
                 do {
                     Processo processoExecMaiorTempoRestante = Collections.max(listaProcessosExecutando, Comparator.comparing(Processo::getTempoRestante));
                     execMaiorTempoRestante = processoExecMaiorTempoRestante.getTempoRestante();
                     Processo processoPronMenorTempoRestante = Collections.min(filaProcessosProntos, Comparator.comparing(Processo::getTempoRestante));
                     pronMenorTempoRestante = processoPronMenorTempoRestante.getTempoRestante();
-                    if(execMaiorTempoRestante > pronMenorTempoRestante) {
+                    if (execMaiorTempoRestante > pronMenorTempoRestante) {
                         processoExecMaiorTempoRestante.preemptarTarefa();
                         listaProcessosExecutando.remove(processoExecMaiorTempoRestante);
                         processosRemovidos++;
                         filaProcessosProntos.add(processoExecMaiorTempoRestante);
                     }
-                } while(execMaiorTempoRestante > pronMenorTempoRestante && !listaProcessosExecutando.isEmpty());
+                } while (execMaiorTempoRestante > pronMenorTempoRestante && !listaProcessosExecutando.isEmpty());
             }
         }
         numTrocasContexto += Math.min(processosRemovidos, filaProcessosProntos.size());
-        
+
         int numInsercoes = Math.min(filaProcessosProntos.size(), numProcessadores - listaProcessosExecutando.size());
-        if(numInsercoes>0) {
+        if (numInsercoes > 0) {
             List<Processo> processosAInserir = new ArrayList<>();
 
             for (int i = 0; i < numInsercoes; i++) {
-                Processo processoAInserir =
-                  tipoEscalonador.equals("Shortest Remaining Time First") ?
-                    Collections.min(filaProcessosProntos, Comparator.comparing(Processo::getTempoRestante))
-                : tipoEscalonador.equals("Shortest Job First") ?
-                    Collections.min(filaProcessosProntos, Comparator.comparing(Processo::getDuracao))
-                : tipoEscalonador.equals("Escalonamento por Prioridade Cooperativo") ?
-                    Collections.max(filaProcessosProntos, Comparator.comparing(Processo::getPrioridade))
-                :   null;
+                Processo processoAInserir
+                        = tipoEscalonador.equals("Shortest Remaining Time First")
+                        ? Collections.min(filaProcessosProntos, Comparator.comparing(Processo::getTempoRestante))
+                        : tipoEscalonador.equals("Shortest Job First")
+                        ? Collections.min(filaProcessosProntos, Comparator.comparing(Processo::getDuracao))
+                        : tipoEscalonador.equals("Escalonamento por Prioridade Cooperativo")
+                        ? Collections.max(filaProcessosProntos, Comparator.comparing(Processo::getPrioridade))
+                        : null;
                 filaProcessosProntos.remove(processoAInserir);
                 processosAInserir.add(processoAInserir);
             }

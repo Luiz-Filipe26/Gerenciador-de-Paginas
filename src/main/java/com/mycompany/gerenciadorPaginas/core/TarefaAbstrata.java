@@ -1,10 +1,10 @@
-
 package com.mycompany.gerenciadorPaginas.core;
 
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class TarefaAbstrata extends Thread {
+
     protected int idProcesso;
     protected String nomeProcesso;
     protected boolean novo;
@@ -20,7 +20,7 @@ public class TarefaAbstrata extends Thread {
         this.encerrado = false;
         this.lock = new ReentrantLock();
     }
-    
+
     public void preemptar() {
         pronto = true;
     }
@@ -28,7 +28,7 @@ public class TarefaAbstrata extends Thread {
     public void encerrarTarefa() {
         encerrado = true;
     }
-    
+
     public void iniciar() {
         novo = false;
         pronto = false;
