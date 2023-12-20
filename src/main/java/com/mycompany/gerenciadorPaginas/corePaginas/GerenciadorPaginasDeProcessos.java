@@ -12,12 +12,17 @@ public class GerenciadorPaginasDeProcessos {
 
     private final ApplicationController applicationController = ApplicationController.getInstancia();
 
-    List<List<Pagina>> sequenciaPaginasNaMemoria = new ArrayList<>();
     private List<Integer> sequenciaPaginas = new ArrayList<>();
+    List<List<Pagina>> sequenciaPaginasNaMemoria = new ArrayList<>();
     Map<Integer, Pagina> paginaFalhadaPorInstante = new HashMap<>();
 
+    public void resetarDados() {
+    	sequenciaPaginasNaMemoria.clear();
+    	paginaFalhadaPorInstante.clear();
+    }
+    
     public void atualizarPaginas(Processo processo, int instante) {
-        if(instante > sequenciaPaginas.size()-1 ) {
+        if(instante > sequenciaPaginas.size() -1) {
             return;
         }
 
@@ -38,7 +43,10 @@ public class GerenciadorPaginasDeProcessos {
             paginaFalhadaPorInstante.put(instante, paginaFalhada);
         }
 
-        applicationController.desenharPaginas(sequenciaPaginasNaMemoria, paginaFalhadaPorInstante);
+    }
+    
+    public void desenharPaginas() {
+    	applicationController.desenharPaginas(sequenciaPaginasNaMemoria, paginaFalhadaPorInstante);
     }
 
     public void adicionarSequenciaPaginas(List<Integer> sequenciasPaginas) {
@@ -51,6 +59,10 @@ public class GerenciadorPaginasDeProcessos {
         return sequenciaPaginas.subList(instanteAtual, sequenciaPaginas.size());
     }
 
+    public int getNumPaginas() {
+    	return sequenciaPaginas.size();
+    }
+    
     public int getNumFalhas() {
         return paginaFalhadaPorInstante.size();
     }

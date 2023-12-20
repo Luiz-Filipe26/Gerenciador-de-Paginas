@@ -28,6 +28,10 @@ public class Processo {
         Escalonador.atualizaListaDeProcessos(
                 new Processo(_nome, _tipoTarefa, _ingresso, _duracao, _prioridade));
     }
+    
+    public Processo() {
+    	this.nome = "Processo nulo";
+    }
 
     private Processo(String _nome, int _tipoTarefa, int _ingresso, int _duracao, int _prioridade) {
         this.nome = _nome;

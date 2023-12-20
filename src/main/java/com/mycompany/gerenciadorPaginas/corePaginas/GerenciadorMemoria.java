@@ -11,7 +11,8 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Processo;
 
 public class GerenciadorMemoria {
-
+	private static GerenciadorMemoria gerenciadorMemoria;
+	
     private String tipoAlocacao;
 
     private Pagina paginaFalhada;
@@ -25,7 +26,16 @@ public class GerenciadorMemoria {
     private Map<Integer, Integer> moldurasPorPagina = new HashMap<>();
     private List<Integer> moldurasDisponiveis = new ArrayList<>();
 
-    public GerenciadorMemoria() {
+    
+    public synchronized static GerenciadorMemoria getInstancia() {
+    	if(gerenciadorMemoria == null) {
+    		gerenciadorMemoria = new GerenciadorMemoria();
+    	}
+    	
+    	return gerenciadorMemoria;
+    }
+    
+    private GerenciadorMemoria() {
         
     }
 
@@ -33,10 +43,33 @@ public class GerenciadorMemoria {
         this.tipoAlocacao = tipoAlocacao;
     }
     
+    public String getTipoAlocacao() {
+        return tipoAlocacao;
+    }
+    
     public void setNumMolduras(int numMolduras) {
         for (int i = 0; i < numMolduras; i++) {
             moldurasDisponiveis.add(i);
         }
+    }
+    
+    public void resetarDados() {
+    	resetarDados(getNumMolduras());
+    }
+
+	public int getNumMolduras() {
+		return moldurasPorPagina.size() + moldurasDisponiveis.size();
+	}
+    
+    public void resetarDados(int numMolduras) {
+        
+    	paginasDisco.clear();
+        paginasMemoriaFila.clear();
+        paginasMemoriaLista.clear();
+        moldurasPorPagina.clear();
+        moldurasDisponiveis.clear();
+        
+        setNumMolduras(numMolduras);
     }
 
     public List<Pagina> getPaginasMemoria() {

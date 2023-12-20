@@ -137,11 +137,13 @@ public class Escalonador extends Thread {
     @Override
     public void run() {
         do {
+        	applicationController.resetarDados();
             adicionarNovosProcessos();
             while (continuarEscalonador && (!processosFuturos.isEmpty() || !listaProcessosExecutando.isEmpty() || !filaProcessosProntos.isEmpty())) {
                 if (prosseguirProcessosEmFila()) {
                     mostrarStatusProcessos();
                     applicationController.atualizarPaginas(listaProcessosExecutando.get(0), instanteAtual - instanteInicio);
+                    applicationController.desenharPaginas();
                     esperarUmQuantum();
                 }
                 limparProcessosAcabados();

@@ -49,6 +49,11 @@ public class ApplicationController {
     public void setTipoAlocao(String tipoAlocacao) {
         gerenciadorMemoria.setTipoAlocacao(tipoAlocacao);
     }
+    
+    public String getTipoAlocao() {
+        return gerenciadorMemoria.getTipoAlocacao();
+    }
+    
 
     public void adicionarOffset(int xOffset, int yOffset) {
         desenhoGrafico.adicionarOffset(xOffset, yOffset);
@@ -129,5 +134,27 @@ public class ApplicationController {
     public void setNumMolduras(int numMolduras) {
         gerenciadorMemoria.setNumMolduras(numMolduras);
     }
+    
+    public void desenharPaginas() {
+    	gerenciadorPaginasDeProcessos.desenharPaginas();
+    }
 
+    public void resetarDados() {
+    	gerenciadorPaginasDeProcessos.resetarDados();
+    	gerenciadorMemoria.resetarDados();
+    }
+    
+    public void resetarDados(int numMolduras) {
+    	gerenciadorPaginasDeProcessos.resetarDados();
+    	gerenciadorMemoria.resetarDados(numMolduras);
+    }
+    
+    public int getNumPaginas() {
+    	return gerenciadorPaginasDeProcessos.getNumPaginas();
+    }
+
+	public int getNumMolduras() {
+		return gerenciadorMemoria.getNumMolduras();
+	}
+    
 }

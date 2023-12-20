@@ -44,7 +44,7 @@ public class App extends Application {
         GerenciadorPaginasDeProcessos gerenciadorPaginasDeProcessos = new GerenciadorPaginasDeProcessos();
         applicationController.setGerenciadorPaginasDeProcessos(gerenciadorPaginasDeProcessos);
 
-        GerenciadorMemoria gerenciadorMemoria = new GerenciadorMemoria();
+        GerenciadorMemoria gerenciadorMemoria = GerenciadorMemoria.getInstancia();
         applicationController.setGerenciadorLogic(gerenciadorMemoria);
 
         //Adicionar listener
