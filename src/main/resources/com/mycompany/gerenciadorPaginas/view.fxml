@@ -80,12 +80,12 @@
       <TextField fx:id="textFieldNumProcessadores" layoutX="14.0" layoutY="710.0" prefHeight="25.0" prefWidth="128.0" text="Nº de processadores" />
       <TextField fx:id="textFieldUnidadeQuantum" layoutX="156.0" layoutY="710.0" prefHeight="22.0" prefWidth="140.0" text="Segundos por quantum" />
       <TextField fx:id="textFieldQuantumPorProcesso" layoutX="309.0" layoutY="710.0" prefHeight="25.0" prefWidth="137.0" text="Quantum por processo" />
-      <ScrollPane fx:id="scrollPaneConsole" hbarPolicy="NEVER" layoutX="909.0" layoutY="406.0" prefHeight="306.0" prefWidth="282.0">
+      <ScrollPane fx:id="scrollPaneConsole" hbarPolicy="NEVER" layoutX="909.0" layoutY="406.0" prefHeight="151.0" prefWidth="282.0">
          <content>
-            <TextArea fx:id="textAreaConsole" prefHeight="305.0" prefWidth="280.0" />
+            <TextArea fx:id="textAreaConsole" prefHeight="149.0" prefWidth="280.0" />
          </content>
       </ScrollPane>
-      <TextArea fx:id="textAreaConsolePaginas" layoutX="681.0" layoutY="559.0" prefHeight="151.0" prefWidth="212.0" />
+      <TextArea fx:id="textAreaConsolePaginas" layoutX="682.0" layoutY="568.0" prefHeight="151.0" prefWidth="509.0" />
       <Button fx:id="buttonSequenciasPaginas" layoutX="493.0" layoutY="570.0" mnemonicParsing="false" onAction="#buttonSequenciaPaginasPressionado" prefHeight="41.0" prefWidth="178.0" text="SEQUÊNCIA DE PÁGINAS">
          <font>
             <Font size="14.0" />

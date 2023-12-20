@@ -11,7 +11,6 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Processo;
 
 public class GerenciadorMemoria {
-	private static GerenciadorMemoria gerenciadorMemoria;
 	
     private String tipoAlocacao;
 
@@ -27,15 +26,7 @@ public class GerenciadorMemoria {
     private List<Integer> moldurasDisponiveis = new ArrayList<>();
 
     
-    public synchronized static GerenciadorMemoria getInstancia() {
-    	if(gerenciadorMemoria == null) {
-    		gerenciadorMemoria = new GerenciadorMemoria();
-    	}
-    	
-    	return gerenciadorMemoria;
-    }
-    
-    private GerenciadorMemoria() {
+    public GerenciadorMemoria() {
         
     }
 
@@ -53,71 +44,9 @@ public class GerenciadorMemoria {
         }
     }
     
-    public void resetarDados() {
-    	resetarDados(getNumMolduras());
-    }
-
 	public int getNumMolduras() {
 		return moldurasPorPagina.size() + moldurasDisponiveis.size();
 	}
-    
-    public void resetarDados(int numMolduras) {
-        
-    	paginasDisco.clear();
-        paginasMemoriaFila.clear();
-        paginasMemoriaLista.clear();
-        moldurasPorPagina.clear();
-        moldurasDisponiveis.clear();
-        
-        setNumMolduras(numMolduras);
-    }
-
-    public List<Pagina> getPaginasMemoria() {
-        List<Pagina> paginasMemoria = new ArrayList<>();
-
-        if (tipoAlocacao.equals("FIFO")) {
-            for (Pagina pagina : paginasMemoriaFila) {
-                paginasMemoria.add(pagina.clone());
-            }
-        } else if (tipoAlocacao.equals("LRU") || tipoAlocacao.equals("ÓTIMO")) {
-            for (Pagina pagina : paginasMemoriaLista) {
-                paginasMemoria.add(pagina.clone());
-            }
-        }
-        return paginasMemoria;
-    }
-
-    public Pagina getPaginaFalhada() {
-        return paginaFalhada;
-    }
-
-    public void acessarPagina(int enderecoPagina, Processo processo) {
-        Pagina pagina = buscarPagina(enderecoPagina);
-        acessarPagina(pagina, processo);
-    }
-    
-    private Pagina buscarPagina(int enderecoPagina) {
-    	List<Pagina>[] colecoesPagina = new List[]{paginasDisco, new ArrayList<>(paginasMemoriaFila), paginasMemoriaLista};
-
-        for (List<Pagina> colecaoPagina : colecoesPagina) {
-            for (Pagina pagina : colecaoPagina) {
-                if (pagina.getEndereco() == enderecoPagina) {
-                    return pagina;
-                }
-            }
-        }
-        return null;
-    }
-
-    public Pagina criarPagina(int enderecoPagina, Processo processo) {
-        enderecosPagina.add(enderecoPagina);
-        Pagina pagina = new Pagina(enderecoPagina, processo);
-        paginaFalhada = pagina;
-
-        alocarPagina(pagina);
-
-        return pagina;
-    }
 
     public void acessarPagina(Pagina pagina, Processo processo) {
         pagina.setProcesso(processo);
@@ -211,5 +140,67 @@ public class GerenciadorMemoria {
         }
 
         return paginaMaisDistante;
+    }
+    
+    public void resetarDados() {
+    	resetarDados(getNumMolduras());
+    }
+    
+    public void resetarDados(int numMolduras) {
+        
+    	paginasDisco.clear();
+        paginasMemoriaFila.clear();
+        paginasMemoriaLista.clear();
+        moldurasPorPagina.clear();
+        moldurasDisponiveis.clear();
+        
+        setNumMolduras(numMolduras);
+    }
+
+    public List<Pagina> getPaginasMemoria() {
+        List<Pagina> paginasMemoria = new ArrayList<>();
+
+        if (tipoAlocacao.equals("FIFO")) {
+            for (Pagina pagina : paginasMemoriaFila) {
+                paginasMemoria.add(pagina.clone());
+            }
+        } else if (tipoAlocacao.equals("LRU") || tipoAlocacao.equals("ÓTIMO")) {
+            for (Pagina pagina : paginasMemoriaLista) {
+                paginasMemoria.add(pagina.clone());
+            }
+        }
+        return paginasMemoria;
+    }
+
+    public Pagina getPaginaFalhada() {
+        return paginaFalhada;
+    }
+    
+    private Pagina buscarPagina(int enderecoPagina) {
+    	List<Pagina>[] colecoesPagina = new List[]{paginasDisco, new ArrayList<>(paginasMemoriaFila), paginasMemoriaLista};
+
+        for (List<Pagina> colecaoPagina : colecoesPagina) {
+            for (Pagina pagina : colecaoPagina) {
+                if (pagina.getEndereco() == enderecoPagina) {
+                    return pagina;
+                }
+            }
+        }
+        return null;
+    }
+
+    public Pagina criarPagina(int enderecoPagina, Processo processo) {
+        enderecosPagina.add(enderecoPagina);
+        Pagina pagina = new Pagina(enderecoPagina, processo);
+        paginaFalhada = pagina;
+
+        alocarPagina(pagina);
+
+        return pagina;
+    }
+
+    public void acessarPagina(int enderecoPagina, Processo processo) {
+        Pagina pagina = buscarPagina(enderecoPagina);
+        acessarPagina(pagina, processo);
     }
 }
