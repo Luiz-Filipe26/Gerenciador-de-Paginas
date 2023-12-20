@@ -330,6 +330,10 @@ public class View implements Initializable {
             labelMensagens.setText("A duração dos processos é menor que a de páginas! Falta: " + duracaoFaltante + " de duração.");
             return;
         }
+        else if(getDuracaoProcessosTotal() > sequenciasPaginas.size()) {
+            int duracaoSobra =  getDuracaoProcessosTotal() - sequenciasPaginas.size() ;
+            labelMensagens.setText("A duração dos processos é maior que a de páginas! Falta: " + duracaoSobra + " de duração.");
+        }
 
         labelMensagens.setText("Sequência de " + sequenciasPaginas.size() + " páginas adicionadas com sucesso!");
         buttonEscalonar.setVisible(true);

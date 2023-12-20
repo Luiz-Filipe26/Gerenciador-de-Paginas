@@ -17,6 +17,9 @@ public class GerenciadorPaginasDeProcessos {
     Map<Integer, Pagina> paginaFalhadaPorInstante = new HashMap<>();
 
     public void atualizarPaginas(Processo processo, int instante) {
+        if(instante > sequenciaPaginas.size()-1 ) {
+            return;
+        }
         int enderecoPagina = sequenciaPaginas.get(instante);
 
         boolean paginaExistente = sequenciaPaginas.indexOf(enderecoPagina) < instante;
