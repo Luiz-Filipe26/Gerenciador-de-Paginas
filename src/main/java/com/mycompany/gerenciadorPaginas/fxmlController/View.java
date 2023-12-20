@@ -17,6 +17,7 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Escalonador;
 import com.mycompany.gerenciadorPaginas.core.Leitor;
 import com.mycompany.gerenciadorPaginas.core.Processo;
+import com.mycompany.gerenciadorPaginas.corePaginas.ChartProdutor;
 import com.mycompany.gerenciadorPaginas.corePaginas.ResultadoTipoAlocacao;
 
 import javafx.application.Platform;
@@ -38,7 +39,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.StackPane;
 
 public class View implements Initializable {
 
@@ -95,6 +95,12 @@ public class View implements Initializable {
 
     @FXML
     private Label labelMensagens;
+    
+    @FXML
+    private NumberAxis xAxis;
+
+    @FXML
+    private NumberAxis yAxis;
 
     @FXML
     private Button buttonSequenciasPaginas;
@@ -165,6 +171,8 @@ public class View implements Initializable {
         inicializarComboBoxes();
 
         criarFocusListeners();
+        
+        inicializarChart();
     }
 
     private void carregarAudios() {
@@ -269,6 +277,21 @@ public class View implements Initializable {
                 }
             }
         });
+    }
+    
+    private void inicializarChart() {
+        xAxis.setLabel("Molduras");
+        yAxis.setLabel("Falhas");
+        
+        xAxis.setAutoRanging(false);
+        xAxis.setLowerBound(0);
+        xAxis.setUpperBound(10);
+        xAxis.setTickUnit(1);
+        
+        yAxis.setAutoRanging(false);
+        yAxis.setLowerBound(0);
+        yAxis.setUpperBound(25);
+        yAxis.setTickUnit(1);
     }
 
     public void adicionarTexto(String textoAdd) {
@@ -551,33 +574,31 @@ public class View implements Initializable {
     @FXML
     private void buttonGerarActionGrafico(ActionEvent event) {
         
-        Axis<Number> xAxis = chartGrafico.getXAxis();
-        xAxis.setLabel("Molduras");
-        Axis<Number> yAxis = chartGrafico.getYAxis();
-        yAxis.setLabel("Falhas");
-
+        ChartProdutor chartProdutor = new ChartProdutor();
         
-        ResultadoTipoAlocacao resultadoFIFO = new ResultadoTipoAlocacao("FIFO");
-        ResultadoTipoAlocacao resultadoLRU = new ResultadoTipoAlocacao("LRU");
-        ResultadoTipoAlocacao resultadoOtimo = new ResultadoTipoAlocacao("Ótimo");
-
-        adicionarSerieAoGrafico(resultadoLRU, chartGrafico);
-        adicionarSerieAoGrafico(resultadoFIFO, chartGrafico);
-        adicionarSerieAoGrafico(resultadoOtimo, chartGrafico);
+        List<ResultadoTipoAlocacao> resultados = chartProdutor.obterResultadosGrafico();
+        
+        for(ResultadoTipoAlocacao resultado : resultados) {
+        	adicionarSerieAoGrafico(resultado);
+        }
 
     }
 
-    private void adicionarSerieAoGrafico(ResultadoTipoAlocacao resultado, LineChart<Number, Number> chart) {
+    private void adicionarSerieAoGrafico(ResultadoTipoAlocacao resultado) {
+    	String tipoAlocacao = resultado.getTipoAlocacao();
         int[][] matrizDeDados = resultado.getNumFalhasPorNumMolduras();
 
-        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
-        series.setName(resultado.getTipoAlocacao());
-
-        for (int[] ponto : matrizDeDados) {
-            series.getData().add(new XYChart.Data<>(ponto[0], ponto[1]));
+        XYChart.Series<Number, Number> serie = new XYChart.Series<>();
+        
+        serie.setName(tipoAlocacao);
+        
+        for (int i = 0; i < matrizDeDados.length; i++) {
+            int x = matrizDeDados[i][0];
+            int y = matrizDeDados[i][1];
+            serie.getData().add(new XYChart.Data<>(x, y));
         }
 
-        chart.getData().add(series);
+        chartGrafico.getData().add(serie);
     }
 
 

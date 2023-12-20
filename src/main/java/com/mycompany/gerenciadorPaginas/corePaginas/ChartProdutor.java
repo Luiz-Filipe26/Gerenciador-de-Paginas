@@ -8,10 +8,10 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Processo;
 
 
-public class GerenciarChart {
+public class ChartProdutor {
     private ApplicationController applicationController = ApplicationController.getInstancia();
     
-    public void mostrarGrafico() {
+    public List<ResultadoTipoAlocacao> obterResultadosGrafico() {
     	String tiposAlocacao[] = {"FIFO", "LRU", "ÓTIMO"};
 
     	int numMoldurasAnterior = applicationController.getNumMolduras();
@@ -25,12 +25,11 @@ public class GerenciarChart {
     	for(String tipoAlocacao : tiposAlocacao) {
     		ResultadoTipoAlocacao resultado = new ResultadoTipoAlocacao(tipoAlocacao);
 	    		
-    		for(int numMolduras=0; numMolduras<5; numMolduras++) {
+    		for(int numMolduras=1; numMolduras<=5; numMolduras++) {
 	    		int numFalhas = getNumFalhas(tipoAlocacao, numMolduras, numInstantes);
 	    		resultado.adicionarFalha(numMolduras, numFalhas);
-	    		
-	    		resultados.add(resultado);
     		}
+    		resultados.add(resultado);
     		
     	}
     	
@@ -39,6 +38,7 @@ public class GerenciarChart {
     	applicationController.setTipoAlocao(tipoAlocacaoAnterior);
     	
     	
+    	return resultados;
     }
     
     private int getNumFalhas(String tipoAlocacao, int numMolduras, int numInstantes) {
