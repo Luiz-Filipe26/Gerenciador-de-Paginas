@@ -9,7 +9,6 @@ import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorMemoria;
 import com.mycompany.gerenciadorPaginas.corePaginas.GerenciadorPaginasDeProcessos;
 import com.mycompany.gerenciadorPaginas.corePaginas.Pagina;
 import com.mycompany.gerenciadorPaginas.fxmlController.View;
-
 public class ApplicationController {
 
     private static ApplicationController applicationController;
@@ -130,4 +129,5 @@ public class ApplicationController {
     public void setNumMolduras(int numMolduras) {
         gerenciadorMemoria.setNumMolduras(numMolduras);
     }
+
 }

@@ -26,6 +26,9 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.LineChart;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -33,6 +36,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.StackPane;
 
 public class View implements Initializable {
 
@@ -113,10 +117,10 @@ public class View implements Initializable {
 
     @FXML
     private TextField textFieldNumMolduras;
-    
+
     @FXML
     private TextField textFieldNumProcessadores;
-    
+
     @FXML
     private TextField textFieldPrioridade;
 
@@ -125,6 +129,12 @@ public class View implements Initializable {
 
     @FXML
     private TextField textFieldUnidadeQuantum;
+
+    @FXML
+    private Button buttonGerarGrafico;
+
+    @FXML
+    private LineChart<?, ?> chartGrafico;
 
     private final String CAMINHO_SOM_BOTAO_PRESSIONADO = "/com/mycompany/gerenciadorPaginas/botao_pressionado.wav";
     private final String CAMINHO_SOM_NOTIFICACAO = "/com/mycompany/gerenciadorPaginas/notificacao.wav";
@@ -173,19 +183,19 @@ public class View implements Initializable {
         nodesDefinir = new Node[]{textFieldNumProcessadores, textFieldUnidadeQuantum, textFieldQuantumPorProcesso, textFieldNumMolduras, buttonDefinirEscalonamento};
         nodesTarefa = new Node[]{textFieldNome, textFieldIngresso, textFieldDuracao, textFieldPrioridade, buttonAdicionarProcesso, comboBoxTipoTarefa, buttonAdicionarProcessosDeArquivo};
         nodesBotaoGrafico = new Node[]{buttonCima, buttonBaixo, buttonEsquerda, buttonDireita, buttonZoomIn, buttonZoomOut};
-        
-        for(Node node: nodesTarefa) {
-        	if(node instanceof TextField) {
-        		nomesTarefaPadrao.put((TextField) node, ((TextField) node).getText());
-        	}
+
+        for (Node node : nodesTarefa) {
+            if (node instanceof TextField) {
+                nomesTarefaPadrao.put((TextField) node, ((TextField) node).getText());
+            }
         }
-        
-        for(Node node : nodesDefinir) {
-        	if(node instanceof TextField) {
-        		nomesEscalonamentoPadrao1.put((TextField) node, ((TextField) node).getText());
-        	}
+
+        for (Node node : nodesDefinir) {
+            if (node instanceof TextField) {
+                nomesEscalonamentoPadrao1.put((TextField) node, ((TextField) node).getText());
+            }
         }
-        
+
         nomesEscalonamentoPadrao2 = new HashMap<>(nomesEscalonamentoPadrao1);
         nomesEscalonamentoPadrao2.remove(textFieldQuantumPorProcesso);
     }
@@ -202,6 +212,7 @@ public class View implements Initializable {
         buttonEscalonar.setVisible(false);
         buttonResetarGrafico.setVisible(false);
         buttonSequenciasPaginas.setVisible(false);
+        buttonGerarGrafico.setVisible(false);
     }
 
     private void inicializarComboBoxes() {
@@ -269,7 +280,7 @@ public class View implements Initializable {
     }
 
     private void tocarSom(Clip som) {
-    	som.setFramePosition(0);
+        som.setFramePosition(0);
         som.start();
     }
 
@@ -337,7 +348,7 @@ public class View implements Initializable {
 
         labelMensagens.setText("Sequência de " + sequenciasPaginas.size() + " páginas adicionadas com sucesso!");
         buttonEscalonar.setVisible(true);
-
+        buttonGerarGrafico.setVisible(true);
         ApplicationController.getInstancia().adicionarSequenciaPaginas(sequenciasPaginas);
     }
 
@@ -536,4 +547,10 @@ public class View implements Initializable {
         ApplicationController.getInstancia().darZoom(1 / 1.1);
     }
 
+    @FXML
+    private void buttonGerarActionGrafico(ActionEvent event) {
+    
+    }
 }
+
+

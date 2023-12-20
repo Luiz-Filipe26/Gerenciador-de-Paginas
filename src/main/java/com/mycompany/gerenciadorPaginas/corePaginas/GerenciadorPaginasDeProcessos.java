@@ -20,6 +20,7 @@ public class GerenciadorPaginasDeProcessos {
         if(instante > sequenciaPaginas.size()-1 ) {
             return;
         }
+
         int enderecoPagina = sequenciaPaginas.get(instante);
 
         boolean paginaExistente = sequenciaPaginas.indexOf(enderecoPagina) < instante;
