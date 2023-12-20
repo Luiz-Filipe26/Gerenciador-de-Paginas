@@ -28,7 +28,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
-import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -139,7 +138,7 @@ public class View implements Initializable {
     private TextField textFieldUnidadeQuantum;
 
     @FXML
-    private Button buttonGerarGrafico;
+    private Button buttonExibirGrafico;
 
     @FXML
     private LineChart<Number, Number> chartGrafico;
@@ -222,7 +221,7 @@ public class View implements Initializable {
         buttonEscalonar.setVisible(false);
         buttonResetarGrafico.setVisible(false);
         buttonSequenciasPaginas.setVisible(false);
-        buttonGerarGrafico.setVisible(false);
+        buttonExibirGrafico.setVisible(false);
     }
 
     private void inicializarComboBoxes() {
@@ -285,12 +284,12 @@ public class View implements Initializable {
         
         xAxis.setAutoRanging(false);
         xAxis.setLowerBound(0);
-        xAxis.setUpperBound(10);
+        xAxis.setUpperBound(6);
         xAxis.setTickUnit(1);
         
         yAxis.setAutoRanging(false);
         yAxis.setLowerBound(0);
-        yAxis.setUpperBound(25);
+        yAxis.setUpperBound(22);
         yAxis.setTickUnit(1);
     }
 
@@ -319,6 +318,7 @@ public class View implements Initializable {
                 + "\nNúmero de falhas: " + ApplicationController.getInstancia().getNumFalhas();
 
         Platform.runLater(() -> {
+            buttonExibirGrafico.setDisable(false);
             textAreaConsolePaginas.appendText(mensagem + "\n Sequência de páginas falhadas: " + ApplicationController.getInstancia().getSequenciaFalhas());
         });
 
@@ -372,7 +372,7 @@ public class View implements Initializable {
 
         labelMensagens.setText("Sequência de " + sequenciasPaginas.size() + " páginas adicionadas com sucesso!");
         buttonEscalonar.setVisible(true);
-        buttonGerarGrafico.setVisible(true);
+        buttonExibirGrafico.setVisible(true);
         ApplicationController.getInstancia().adicionarSequenciaPaginas(sequenciasPaginas);
     }
 
@@ -523,6 +523,8 @@ public class View implements Initializable {
         tocarSom(somBotaoPressionado);
 
         buttonResetarGrafico.setVisible(true);
+        buttonExibirGrafico.setDisable(true);
+        
         if (!Escalonador.getInstancia().isAlive()) {
             Escalonador.getInstancia().start();
         } else if (Escalonador.getInstancia().isDormindo()) {
@@ -572,7 +574,9 @@ public class View implements Initializable {
     }
 
     @FXML
-    private void buttonGerarActionGrafico(ActionEvent event) {
+    private void buttonExibirGraficoPressionado(ActionEvent event) {
+    	
+		chartGrafico.getData().clear();
         
         ChartProdutor chartProdutor = new ChartProdutor();
         
