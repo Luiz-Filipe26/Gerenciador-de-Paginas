@@ -99,9 +99,9 @@
             <Font size="14.0" />
          </font>
       </Button>
-      <LineChart fx:id="chartGrafico" layoutX="655.0" layoutY="26.0" prefHeight="341.0" prefWidth="492.0">
+      <LineChart fx:id="chartGrafico" layoutX="655.0" layoutY="26.0" prefHeight="341.0" prefWidth="492.0" title="Comparador de falhas de Páginas">
         <xAxis>
-          <CategoryAxis side="BOTTOM" />
+          <NumberAxis side="BOTTOM" />
         </xAxis>
         <yAxis>
           <NumberAxis side="LEFT" />

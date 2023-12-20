@@ -17,6 +17,7 @@ import com.mycompany.gerenciadorPaginas.controle.ApplicationController;
 import com.mycompany.gerenciadorPaginas.core.Escalonador;
 import com.mycompany.gerenciadorPaginas.core.Leitor;
 import com.mycompany.gerenciadorPaginas.core.Processo;
+import com.mycompany.gerenciadorPaginas.corePaginas.ResultadoTipoAlocacao;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,6 +27,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.canvas.Canvas;
+import javafx.scene.chart.Axis;
 import javafx.scene.chart.LineChart;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
@@ -134,7 +136,7 @@ public class View implements Initializable {
     private Button buttonGerarGrafico;
 
     @FXML
-    private LineChart<?, ?> chartGrafico;
+    private LineChart<Number, Number> chartGrafico;
 
     private final String CAMINHO_SOM_BOTAO_PRESSIONADO = "/com/mycompany/gerenciadorPaginas/botao_pressionado.wav";
     private final String CAMINHO_SOM_NOTIFICACAO = "/com/mycompany/gerenciadorPaginas/notificacao.wav";
@@ -340,9 +342,8 @@ public class View implements Initializable {
             int duracaoFaltante = sequenciasPaginas.size() - getDuracaoProcessosTotal();
             labelMensagens.setText("A duração dos processos é menor que a de páginas! Falta: " + duracaoFaltante + " de duração.");
             return;
-        }
-        else if(getDuracaoProcessosTotal() > sequenciasPaginas.size()) {
-            int duracaoSobra =  getDuracaoProcessosTotal() - sequenciasPaginas.size() ;
+        } else if (getDuracaoProcessosTotal() > sequenciasPaginas.size()) {
+            int duracaoSobra = getDuracaoProcessosTotal() - sequenciasPaginas.size();
             labelMensagens.setText("A duração dos processos é maior que a de páginas! Falta: " + duracaoSobra + " de duração.");
         }
 
@@ -549,8 +550,35 @@ public class View implements Initializable {
 
     @FXML
     private void buttonGerarActionGrafico(ActionEvent event) {
-    
+        
+        Axis<Number> xAxis = chartGrafico.getXAxis();
+        xAxis.setLabel("Molduras");
+        Axis<Number> yAxis = chartGrafico.getYAxis();
+        yAxis.setLabel("Falhas");
+
+        
+        ResultadoTipoAlocacao resultadoFIFO = new ResultadoTipoAlocacao("FIFO");
+        ResultadoTipoAlocacao resultadoLRU = new ResultadoTipoAlocacao("LRU");
+        ResultadoTipoAlocacao resultadoOtimo = new ResultadoTipoAlocacao("Ótimo");
+
+        adicionarSerieAoGrafico(resultadoLRU, chartGrafico);
+        adicionarSerieAoGrafico(resultadoFIFO, chartGrafico);
+        adicionarSerieAoGrafico(resultadoOtimo, chartGrafico);
+
     }
+
+    private void adicionarSerieAoGrafico(ResultadoTipoAlocacao resultado, LineChart<Number, Number> chart) {
+        int[][] matrizDeDados = resultado.getNumFalhasPorNumMolduras();
+
+        XYChart.Series<Number, Number> series = new XYChart.Series<Number, Number>();
+        series.setName(resultado.getTipoAlocacao());
+
+        for (int[] ponto : matrizDeDados) {
+            series.getData().add(new XYChart.Data<>(ponto[0], ponto[1]));
+        }
+
+        chart.getData().add(series);
+    }
+
+
 }
-
-
